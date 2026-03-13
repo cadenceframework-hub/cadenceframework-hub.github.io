@@ -17,7 +17,8 @@
   <rect width="400" height="400" fill="url(#glow)"/>
 
   <!-- Outer border -->
-  <rect x="1" y="1" width="398" height="398" fill="none" stroke="#222" stroke-width="1"/>
+  <rect x="1" y="1" width="398" height="398" fill="none" stroke="#ff6600" stroke-width="2" opacity="0.35"/>
+  <rect x="8" y="8" width="384" height="384" fill="none" stroke="#2a2a2a" stroke-width="1"/>
 
   <!-- Top label -->
   <text
@@ -27,7 +28,7 @@
     font-size="11"
     font-weight="400"
     text-anchor="middle"
-    fill="#f0f0f0"
+    fill="#3a3a3a"
     letter-spacing="6">THE</text>
 
   <!-- Orange accent line above wordmark -->

@@ -2,13 +2,12 @@
   <!-- Background -->
   <rect width="400" height="400" fill="#0a0a0a"/>
 
-  <!-- Grid overlay -->
   <defs>
     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
       <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1a1a1a" stroke-width="0.8"/>
     </pattern>
-    <radialGradient id="glow" cx="50%" cy="40%" r="55%">
-      <stop offset="0%" stop-color="#ff6600" stop-opacity="0.10"/>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff6600" stop-opacity="0.12"/>
       <stop offset="100%" stop-color="#ff6600" stop-opacity="0"/>
     </radialGradient>
   </defs>
@@ -20,26 +19,15 @@
   <rect x="1" y="1" width="398" height="398" fill="none" stroke="#ff6600" stroke-width="2" opacity="0.35"/>
   <rect x="8" y="8" width="384" height="384" fill="none" stroke="#2a2a2a" stroke-width="1"/>
 
-  <!-- Top label -->
+  <!-- Orange accent line above -->
+  <rect x="140" y="152" width="120" height="2" fill="#ff6600" rx="1" opacity="0.7"/>
+
+  <!-- CADENCE — orange, large -->
   <text
     x="200"
-    y="123"
-    font-family="'Courier New', Courier, monospace"
-    font-size="11"
-    font-weight="400"
-    text-anchor="middle"
-    fill="#3a3a3a"
-    letter-spacing="6">THE</text>
-
-  <!-- Orange accent line above wordmark -->
-  <rect x="160" y="135" width="80" height="2" fill="#ff6600" rx="1" opacity="0.7"/>
-
-  <!-- CADENCE — orange -->
-  <text
-    x="200"
-    y="197"
+    y="218"
     font-family="Georgia, 'Times New Roman', serif"
-    font-size="52"
+    font-size="62"
     font-weight="700"
     text-anchor="middle"
     fill="#ff6600"
@@ -48,24 +36,14 @@
   <!-- FRAMEWORK — white -->
   <text
     x="200"
-    y="243"
+    y="263"
     font-family="Georgia, 'Times New Roman', serif"
-    font-size="36"
+    font-size="38"
     font-weight="400"
     text-anchor="middle"
     fill="#f0f0f0"
-    letter-spacing="2">FRAMEWORK</text>
+    letter-spacing="3">FRAMEWORK</text>
 
-  <!-- Orange accent line below wordmark -->
-  <rect x="160" y="259" width="80" height="2" fill="#ff6600" rx="1" opacity="0.4"/>
-
-  <!-- Bottom tagline -->
-  <text
-    x="200"
-    y="295"
-    font-family="'Courier New', Courier, monospace"
-    font-size="9"
-    text-anchor="middle"
-    fill="#2e2e2e"
-    letter-spacing="3">FIND THE RHYTHM</text>
+  <!-- Orange accent line below -->
+  <rect x="140" y="278" width="120" height="2" fill="#ff6600" rx="1" opacity="0.4"/>
 </svg>

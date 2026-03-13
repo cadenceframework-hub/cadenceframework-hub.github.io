@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Cadence Framework</title>
+  <meta name="description" content="Cadence helps companies build up their systems so they can spend less time managing and more time working towards their goals." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:            #0a0a0a;
+      --bg-card:       #111111;
+      --bg-card-hover: #161616;
+      --bg-raised:     #1a1a1a;
+      --border:        #222222;
+      --border-mid:    #2e2e2e;
+      --border-bright: #404040;
+      --text:          #f0f0f0;
+      --text-secondary:#b8b8b8;
+      --muted:         #5a5a5a;
+      --orange:        #ff6600;
+      --orange-light:  #ff7a1a;
+      --orange-dim:    rgba(255,102,0,0.08);
+      --orange-glow:   rgba(255,102,0,0.15);
+      --mono:          "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+      --sans:          "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --max-w:         1080px;
+      --r:             6px;
+      --section-gap:   120px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── Grid overlay ── */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 72px 72px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Orange ambient glow ── */
+    .glow-top {
+      position: fixed;
+      top: -300px; left: 50%;
+      transform: translateX(-50%);
+      width: 900px; height: 600px;
+      background: radial-gradient(ellipse, rgba(255,102,0,0.06) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Layout ── */
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    section { position: relative; z-index: 1; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    nav.scrolled {
+      background: rgba(10,10,10,0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-logo .accent { color: var(--orange); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 0.4rem 0.75rem;
+      border-radius: var(--r);
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+    .nav-links a.active { color: var(--orange); }
+
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--bg);
+      background: var(--orange);
+      padding: 0.5rem 1.1rem;
+      border-radius: var(--r);
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+      white-space: nowrap;
+    }
+
+    .btn-cta:hover { background: var(--orange-light); }
+    .btn-cta:active { transform: scale(0.97); }
+
+    /* Mobile nav */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 0.5rem 0.65rem;
+      cursor: pointer;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 18px; height: 1.5px;
+      background: var(--text-secondary);
+      transition: all 0.2s ease;
+    }
+
+    .nav-hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4.5px, 4.5px); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4.5px, -4.5px); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 64px; left: 0; right: 0;
+      background: rgba(10,10,10,0.98);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      z-index: 199;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .mobile-menu.open { display: flex; }
+
+    .mobile-menu a {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.15s;
+    }
+
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu a:hover { color: var(--orange); }
+
+    .mobile-menu .btn-cta {
+      margin-top: 1rem;
+      justify-content: center;
+      padding: 0.85rem;
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ── HERO ── */
+    #hero {
+      padding: 180px 0 120px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-mid);
+      border-radius: 100px;
+      padding: 0.4rem 1rem;
+      margin-bottom: 3rem;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .hero-badge-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--orange);
+      box-shadow: 0 0 8px var(--orange-glow);
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--orange-glow); }
+      50% { opacity: 0.4; box-shadow: 0 0 2px transparent; }
+    }
+
+    .hero-h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 0.95;
+      color: var(--text);
+      margin-bottom: 2rem;
+    }
+
+    .hero-h1 .word-accent {
+      color: var(--orange);
+      display: inline-block;
+    }
+
+    .hero-h1 .word-muted {
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin: 0 auto 3rem;
+      line-height: 1.8;
+      font-weight: 400;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--orange);
+      color: #000;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 0.9rem 1.8rem;
+      border-radius: var(--r);
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+      box-shadow: 0 0 0 0 rgba(255,102,0,0);
+    }
+
+    .btn-primary:hover {
+      background: var(--orange-light);
+      box-shadow: 0 4px 24px rgba(255,102,0,0.25);
+    }
+
+    .btn-primary:active { transform: scale(0.97); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      padding: 0.9rem 1.8rem;
+      border-radius: var(--r);
+      text-decoration: none;
+      border: 1px solid var(--border-mid);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--border-bright);
+      color: var(--text);
+      background: rgba(255,255,255,0.03);
+    }
+
+    /* ── SECTION SHARED ── */
+    .label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .label::before {
+      content: "";
+      width: 20px; height: 1px;
+      background: var(--orange);
+      opacity: 0.6;
+    }
+
+    .h2 {
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+
+    .h2 em { font-style: normal; color: var(--orange); }
+
+    .lead {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 560px;
+      line-height: 1.8;
+      font-weight: 400;
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* ── ABOUT ── */
+    #about {
+      padding: var(--section-gap) 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .about-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .about-copy p + p { margin-top: 1.25rem; }
+
+    .about-copy p {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
+    }
+
+    .about-copy p strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .stats-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .stat {
+      padding: 2rem 1.75rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      margin: -1px 0 0 -1px;
+    }
+
+    .stat-num {
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      color: var(--orange);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-desc {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── CADENCE SYNC ── */
+    #sync {
+      padding: var(--section-gap) 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .sync-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: end;
+      margin-bottom: 4rem;
+    }
+
+    .phases-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+    }
+
+    .phase {
+      padding: 2rem 1.5rem;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      position: relative;
+      transition: background 0.2s ease;
+      cursor: default;
+    }
+
+    .phase:last-child { border-right: none; }
+    .phase:hover { background: var(--bg-card-hover); }
+
+    .phase-n {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      color: var(--orange);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .phase-n::after {
+      content: "";
+      flex: 1; height: 1px;
+      background: var(--border-mid);
+    }
+
+    .phase-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.3rem;
+    }
+
+    .phase-tag {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--orange);
+      letter-spacing: 0.08em;
+      opacity: 0.7;
+      margin-bottom: 1.25rem;
+    }
+
+    .phase-body {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ── SERVICES ── */
+    #services {
+      padding: var(--section-gap) 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .services-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 3rem;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .services-note {
+      font-size: 0.9rem;
+      color: var(--muted);
+      max-width: 280px;
+      line-height: 1.7;
+      font-style: italic;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+    }
+
+    .service {
+      padding: 1.5rem;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      transition: background 0.2s ease;
+    }
+
+    .service:hover { background: var(--bg-card-hover); }
+
+    .service-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--orange);
+      opacity: 0.6;
+    }
+
+    .service:hover .service-dot { opacity: 1; }
+
+    .service-name {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+
+    /* ── CASE STUDIES ── */
+    #work {
+      padding: var(--section-gap) 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .work-top { margin-bottom: 3.5rem; }
+
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow: hidden;
+    }
+
+    .work-cat {
+      padding: 2rem 1.75rem;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s ease;
+    }
+
+    .work-cat:hover { background: var(--bg-card-hover); }
+
+    .work-cat:nth-child(3n) { border-right: none; }
+
+    .cat-label {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--orange);
+      padding-bottom: 1rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .client-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .client-list li {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      transition: color 0.15s;
+    }
+
+    .client-list li::before {
+      content: "";
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--orange);
+      opacity: 0.5;
+      flex-shrink: 0;
+    }
+
+    .work-cat:hover .client-list li { color: var(--text); }
+    .work-cat:hover .client-list li::before { opacity: 1; }
+
+    /* ── CTA SECTION ── */
+    #cta {
+      padding: var(--section-gap) 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .cta-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 5rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-box::before {
+      content: "";
+      position: absolute;
+      top: -150px; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 400px;
+      background: radial-gradient(ellipse, rgba(255,102,0,0.07) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .cta-box::after {
+      content: "";
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--orange), transparent);
+      opacity: 0.4;
+    }
+
+    .cta-label { justify-content: center; margin-bottom: 1.5rem; }
+
+    .cta-title {
+      font-size: clamp(2rem, 4.5vw, 3.5rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    .cta-title em { font-style: normal; color: var(--orange); }
+
+    .cta-sub {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 460px;
+      margin: 0 auto 3rem;
+      line-height: 1.8;
+    }
+
+    .cta-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+    }
+
+    .footer-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .footer-logo {
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .footer-logo .accent { color: var(--orange); }
+
+    .footer-tagline {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    .footer-copy {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      width: 100%;
+      text-align: right;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      :root { --section-gap: 80px; }
+
+      .phases-grid { grid-template-columns: 1fr 1fr; }
+      .phase { border-bottom: 1px solid var(--border); }
+      .phase:nth-child(2) { border-right: none; }
+      .phase:nth-child(3) { border-right: 1px solid var(--border); border-bottom: none; }
+      .phase:nth-child(4) { border-right: none; border-bottom: none; }
+
+      .about-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .sync-top { grid-template-columns: 1fr; gap: 2rem; }
+      .work-grid { grid-template-columns: 1fr 1fr; }
+      .work-cat:nth-child(3n) { border-right: 1px solid var(--border); }
+      .work-cat:nth-child(2n) { border-right: none; }
+    }
+
+    @media (max-width: 640px) {
+      .wrap { padding: 0 1.25rem; }
+      :root { --section-gap: 64px; }
+
+      .nav-links, .nav-cta-desktop { display: none; }
+      .nav-hamburger { display: flex; }
+
+      #hero { padding: 140px 0 80px; }
+      .hero-h1 { letter-spacing: -0.04em; }
+
+      .phases-grid { grid-template-columns: 1fr; }
+      .phase { border-right: none; border-bottom: 1px solid var(--border); }
+      .phase:last-child { border-bottom: none; }
+
+      .work-grid { grid-template-columns: 1fr; }
+      .work-cat { border-right: none; }
+      .work-cat:nth-child(3n) { border-right: none; }
+      .work-cat:nth-child(2n) { border-right: none; }
+
+      .cta-box { padding: 3rem 1.5rem; }
+
+      .stats-panel { grid-template-columns: 1fr 1fr; }
+
+      .services-top { flex-direction: column; align-items: flex-start; }
+
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .footer-copy { text-align: left; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-badge-dot { animation: none; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+      * { transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="glow-top" aria-hidden="true"></div>
+
+<!-- ── NAV ── -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">The <span class="accent">Cadence</span> Framework</a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#sync">Process</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#work">Work</a></li>
+    </ul>
+
+    <a href="https://calendly.com/rosh903/cadencediscoverycall" target="_blank" rel="noopener noreferrer" class="btn-cta nav-cta-desktop">Book a Call &rarr;</a>
+
+    <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Navigation">
+  <a href="#about" class="mobile-link">About</a>
+  <a href="#sync" class="mobile-link">Process</a>
+  <a href="#services" class="mobile-link">Services</a>
+  <a href="#work" class="mobile-link">Work</a>
+  <a href="https://calendly.com/rosh903/cadencediscoverycall" target="_blank" rel="noopener noreferrer" class="btn-cta">Book a Call &rarr;</a>
+</div>
+
+<!-- ── HERO ── -->
+<section id="hero" aria-label="Hero">
+  <div class="wrap" style="text-align:center;">
+    <div class="hero-badge reveal">
+      <span class="hero-badge-dot"></span>
+      Now taking clients &mdash; 2026
+    </div>
+    <h1 class="hero-h1 reveal reveal-delay-1">
+      Find the<br/>
+      <span class="word-accent">Rhythm</span><br/>
+      <span class="word-muted">with your framework.</span>
+    </h1>
+    <p class="hero-sub reveal reveal-delay-2">
+      Cadence builds the systems your company needs to stop running in place and start moving toward what actually matters.
+    </p>
+    <div class="hero-actions reveal reveal-delay-3">
+      <a href="https://calendly.com/rosh903/cadencediscoverycall" target="_blank" rel="noopener noreferrer" class="btn-primary">
+        Book a Free Call
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <a href="#sync" class="btn-secondary">See the Process</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section id="about" aria-label="About">
+  <div class="wrap">
+    <div class="about-layout">
+      <div class="about-copy">
+        <p class="label reveal">What We Do</p>
+        <h2 class="h2 reveal reveal-delay-1">From Maintenance<br/>to <em>Movement.</em></h2>
+        <p class="reveal reveal-delay-2">
+          Whether you've already started or you're just getting set up — Cadence builds the systems your company needs to stop running in place.
+        </p>
+        <p class="reveal reveal-delay-3">
+          We go through your work day <strong>step by step</strong>. We look at your funnels, your day-to-day, your gaps. Then we design a framework — and make sure it runs.
+        </p>
+        <p class="reveal reveal-delay-4">
+          The goal isn't to manage your company for you. It's to build something so good that you can <strong>focus on leading it.</strong>
+        </p>
+      </div>
+      <div class="stats-panel reveal reveal-delay-2">
+        <div class="stat">
+          <div class="stat-num">11</div>
+          <div class="stat-desc">Services<br/>offered</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">4</div>
+          <div class="stat-desc">Phase<br/>process</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">10+</div>
+          <div class="stat-desc">Clients<br/>served</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">∞</div>
+          <div class="stat-desc">Industries<br/>welcome</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CADENCE SYNC ── -->
+<section id="sync" aria-label="The Cadence Sync process">
+  <div class="wrap">
+    <div class="sync-top">
+      <div>
+        <p class="label reveal">The Cadence Sync</p>
+        <h2 class="h2 reveal reveal-delay-1">Every client.<br/>One process.</h2>
+      </div>
+      <p class="lead reveal reveal-delay-2">
+        Regardless of your industry, every engagement moves through the same four phases — built to take you from stuck to scaling.
+      </p>
+    </div>
+    <div class="phases-grid reveal reveal-delay-1">
+      <div class="phase">
+        <div class="phase-n">01</div>
+        <div class="phase-name">The Audit</div>
+        <div class="phase-tag">Pulse Check</div>
+        <p class="phase-body">We set up a call and map your current workflow — finding exactly where you're stuck in maintenance mode and what's slowing you down.</p>
+      </div>
+      <div class="phase">
+        <div class="phase-n">02</div>
+        <div class="phase-name">The Blueprint</div>
+        <div class="phase-tag">The Score</div>
+        <p class="phase-body">We design your step-by-step process. A workflow map showing how your AI, web, and content systems connect — and what needs to change.</p>
+      </div>
+      <div class="phase">
+        <div class="phase-n">03</div>
+        <div class="phase-name">The Integration</div>
+        <div class="phase-tag">The Downbeat</div>
+        <p class="phase-body">We build. Implementing the UI/UX, AI automations, and brand identity your company needs — based on your audit, not a preset package.</p>
+      </div>
+      <div class="phase">
+        <div class="phase-n">04</div>
+        <div class="phase-name">The Momentum</div>
+        <div class="phase-tag">The Resonance</div>
+        <p class="phase-body">Systems are live and running. Your company stops managing the machine — and starts leading it. Maintenance to movement.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section id="services" aria-label="Services">
+  <div class="wrap">
+    <div class="services-top">
+      <div>
+        <p class="label reveal">Services</p>
+        <h2 class="h2 reveal reveal-delay-1">What we build.</h2>
+      </div>
+      <p class="services-note reveal reveal-delay-2">
+        We deploy what you need — based on your audit. Not a package deal.
+      </p>
+    </div>
+    <div class="services-grid reveal reveal-delay-1">
+      <div class="service">
+        <div class="service-dot"></div>
+        <div class="service-name">Content Creation</div>
+      </div>
+      <div class="service">
+        <div class="service-dot"></div>
+        <div class="service-name">Consulting</div>
+      </div>
+      <div class="service">
+        <div class="service-dot"></div>
+        <div class="service-name">Photography &amp; Videography</div>
+      </div>
+      <div class="service">
+        <div class="service-dot"></div>
+        <div class="service-name">Personal Branding</div>
+      </div>
+      <div class="service">
+        <div class="service-dot"></div>
+        <div class="service-name">UI / UX Development</div>
+      </div>
+      <div class="service">
+        <div class="service-dot"></div>
+        <div class="service-name">Branding &amp; Brand Identity</div>
+      </div>
+      <div class="service">
+        <div class="service-dot"></div>
+        <div class="service-name">Social Media</div>
+      </div>
+      <div class="service">
+        <div class="service-dot"></div>
+        <div class="service-name">Web Development</div>
+      </div>
+      <div class="service">
+        <div class="service-dot"></div>
+        <div class="service-name">App Development</div>
+      </div>
+      <div class="service">
+        <div class="service-dot"></div>
+        <div class="service-name">Digital Marketing</div>
+      </div>
+      <div class="service">
+        <div class="service-dot"></div>
+        <div class="service-name">AI Integration</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CASE STUDIES ── -->
+<section id="work" aria-label="Our work and clients">
+  <div class="wrap">
+    <div class="work-top">
+      <p class="label reveal">Our Work</p>
+      <h2 class="h2 reveal reveal-delay-1">Who we've built for.</h2>
+      <p class="lead reveal reveal-delay-2">Across industries. Different goals. One framework.</p>
+    </div>
+    <div class="work-grid reveal reveal-delay-1">
+      <div class="work-cat">
+        <div class="cat-label">Companies</div>
+        <ul class="client-list">
+          <li>Amoris Christ</li>
+          <li>Jesus Youth</li>
+          <li>Lumen Vitae</li>
+        </ul>
+      </div>
+      <div class="work-cat">
+        <div class="cat-label">Video &amp; Photo</div>
+        <ul class="client-list">
+          <li>FromNowOn</li>
+        </ul>
+      </div>
+      <div class="work-cat">
+        <div class="cat-label">Musicians</div>
+        <ul class="client-list">
+          <li>Ike</li>
+          <li>JKannon</li>
+        </ul>
+      </div>
+      <div class="work-cat">
+        <div class="cat-label">Clothing Brands</div>
+        <ul class="client-list">
+          <li>Made for God</li>
+        </ul>
+      </div>
+      <div class="work-cat">
+        <div class="cat-label">Real Estate</div>
+        <ul class="client-list">
+          <li>ZPI</li>
+        </ul>
+      </div>
+      <div class="work-cat">
+        <div class="cat-label">Catholic Churches</div>
+        <ul class="client-list">
+          <li>AJS</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section id="cta" aria-label="Book a call">
+  <div class="wrap">
+    <div class="cta-box">
+      <p class="label cta-label reveal">Get Started</p>
+      <h2 class="cta-title reveal reveal-delay-1">
+        Ready to find your<br/><em>rhythm?</em>
+      </h2>
+      <p class="cta-sub reveal reveal-delay-2">
+        Set up a call. We'll map out where you are, where you want to go, and exactly how to get there.
+      </p>
+      <div class="cta-actions reveal reveal-delay-3">
+        <a href="https://calendly.com/rosh903/cadencediscoverycall" target="_blank" rel="noopener noreferrer" class="btn-primary">
+          Book a Free Call
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">The <span class="accent">Cadence</span> Framework</div>
+      <div class="footer-tagline">Find the rhythm. Build the system.</div>
+    </div>
+    <ul class="footer-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#sync">Process</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#cta">Contact</a></li>
+    </ul>
+    <p class="footer-copy">&copy; 2026 The Cadence Framework. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  // ── Sticky nav on scroll ──
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  // ── Mobile menu ──
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    hamburger.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  document.querySelectorAll('.mobile-link, .mobile-menu .btn-cta').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // ── Active nav links on scroll ──
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id);
+        });
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+
+  sections.forEach(s => sectionObserver.observe(s));
+
+  // ── Scroll reveal ──
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+
+</body>
+</html>

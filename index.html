@@ -254,6 +254,24 @@
     .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.04); }
     .nav-links a.active { color: var(--orange); }
 
+    /* Brand Kit — outlined so it reads apart from the muted section links
+       without competing with the filled Book a Call CTA */
+    .nav-links a.nav-kit {
+      color: var(--orange);
+      border: 1px solid var(--orange);
+      background: var(--orange-dim);
+      margin-left: 0.35rem;
+    }
+
+    .nav-links a.nav-kit:hover {
+      color: var(--bg);
+      background: var(--orange);
+      border-color: var(--orange);
+    }
+
+    /* Mobile menu: tint it so it stands out in the stacked list too */
+    .mobile-menu a.mobile-kit { color: var(--orange); }
+
     .btn-cta {
       display: inline-flex;
       align-items: center;
@@ -548,6 +566,19 @@
       border-color: var(--border-bright);
       color: var(--text);
       background: rgba(255,255,255,0.03);
+    }
+
+    /* Brand Kit button — orange outline, one step below the filled primary */
+    .btn-kit {
+      color: var(--orange);
+      border-color: var(--orange);
+      background: var(--orange-dim);
+    }
+
+    .btn-kit:hover {
+      color: var(--bg);
+      background: var(--orange);
+      border-color: var(--orange);
     }
 
     /* ── TICKER ── */
@@ -1398,7 +1429,7 @@
       <li><a href="#sync">Process</a></li>
       <li><a href="#services">Services</a></li>
       <li><a href="#work">Work</a></li>
-      <li><a href="/brand-discovery-kit/">Brand Kit</a></li>
+      <li><a href="/brand-discovery-kit/" class="nav-kit">Brand Kit</a></li>
     </ul>
 
     <a href="https://calendly.com/rosh903/cadencediscoverycall" target="_blank" rel="noopener noreferrer" class="btn-cta nav-cta-desktop">Book a Call &rarr;<span class="sr-only"> (opens in new tab)</span></a>
@@ -1415,7 +1446,7 @@
   <a href="#sync" class="mobile-link">Process</a>
   <a href="#services" class="mobile-link">Services</a>
   <a href="#work" class="mobile-link">Work</a>
-  <a href="/brand-discovery-kit/" class="mobile-link">Brand Kit</a>
+  <a href="/brand-discovery-kit/" class="mobile-link mobile-kit">Brand Kit</a>
   <a href="https://calendly.com/rosh903/cadencediscoverycall" target="_blank" rel="noopener noreferrer" class="btn-cta">Book a Call &rarr;<span class="sr-only"> (opens in new tab)</span></a>
 </div>
 
@@ -1731,6 +1762,10 @@
           Book Your Free Discovery Call
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
+        <a href="/brand-discovery-kit/" class="btn-secondary btn-kit">
+          Fill the Brand Kit
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
       </div>
       <p class="cta-reassurance reveal reveal-delay-3">No contracts. No pressure. Just clarity.</p>
     </div>
@@ -1786,6 +1821,7 @@
       <li><a href="#services">Services</a></li>
       <li><a href="#work">Work</a></li>
       <li><a href="#cta">Contact</a></li>
+      <li><a href="/brand-discovery-kit/">Brand Kit</a></li>
     </ul>
     <div class="footer-contact">
       <a href="mailto:cadenceframework@gmail.com">cadenceframework@gmail.com</a>

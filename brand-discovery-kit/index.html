@@ -641,11 +641,57 @@
   }
 
   @media (max-width: 640px) {
+    .wrap { padding: 28px 16px 64px; }
     .panel { padding: 22px 18px 20px; }
     .masthead-left h1 { font-size: 1.6rem; }
     .brief-stamp { text-align: left; }
     .q-edit-row { flex-direction: column; }
     .q-edit-controls { flex-direction: row; }
+
+    .q textarea { min-height: 88px; padding: 12px; }
+    .site-nav a { margin-left: -0.75rem; }
+
+    /* Stack the footer bar so both export buttons are full-width and reachable */
+    .footerbar { flex-direction: column; align-items: stretch; gap: 16px; }
+    .progress-wrap { min-width: 0; }
+    .export-buttons { width: 100%; }
+    .export-btn { flex: 1; justify-content: center; text-align: center; }
+
+    /* Keep the nav buttons from crowding at the narrowest widths */
+    .panel-nav { gap: 10px; }
+    .navbtn { flex: 1; }
+  }
+
+  @media (max-width: 380px) {
+    .tabs { gap: 4px; }
+    .tab { padding: 12px 10px; font-size: 0.68rem; }
+    .masthead-left h1 { font-size: 1.4rem; }
+  }
+
+  /* Touch devices, keyed on input type rather than width — a 768px iPad needs
+     these as much as a 390px phone does. */
+  @media (pointer: coarse) {
+    /* iOS Safari auto-zooms any field under 16px on focus, which throws the
+       layout sideways mid-answer. 16px keeps the viewport still. */
+    .q textarea,
+    .q-edit input.q-text,
+    .q-edit input.q-why,
+    .panel-head input.title-edit,
+    .panel-note input.note-edit {
+      font-size: 16px;
+    }
+
+    /* 44px minimum touch target, per Apple's HIG */
+    .tab,
+    .export-btn,
+    .navbtn,
+    .edit-toggle,
+    .add-q-btn,
+    .site-nav a { min-height: 44px; }
+
+    .tab { padding: 12px 14px; }
+    .site-nav a { padding: 0.6rem 0.75rem; }
+    .icon-btn { width: 44px; height: 44px; font-size: 1rem; }
   }
 
   @media print {

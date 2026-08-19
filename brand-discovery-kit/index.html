@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Discovery Kit — The Cadence Framework</title>
+<meta name="description" content="Client intake brief for The Cadence Framework — eight sections of brand discovery questions.">
+<meta name="theme-color" content="#ff6600">
+<link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Design tokens mirror index.html — keep these in sync with the landing page */
+    --paper: #0a0a0a;          /* --bg */
+    --paper-raised: #111111;   /* --bg-card */
+    --paper-lifted: #1a1a1a;   /* --bg-raised */
+    --ink: #f0f0f0;            /* --text */
+    --ink-mid: #cccccc;        /* --text-secondary */
+    --ink-soft: #888888;       /* --muted */
+    --ochre: #ff6600;          /* --orange */
+    --ochre-light: #ff7a1a;    /* --orange-light */
+    --ochre-soft: rgba(255,102,0,0.08);
+    --ochre-glow: rgba(255,102,0,0.15);
+    --sage: #4da3ff;           /* secondary accent, dark-safe */
+    --line: #222222;           /* --border */
+    --line-mid: #2e2e2e;       /* --border-mid */
+    --stamp-red: #c2543f;
+    --shadow: rgba(0, 0, 0, 0.7);
+    --mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --r: 6px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { color-scheme: dark; }
+
+  /* Visible focus indicators for keyboard navigation — as on index.html */
+  *:focus-visible {
+    outline: 2px solid var(--ochre);
+    outline-offset: 3px;
+  }
+
+  *:focus:not(:focus-visible) { outline: none; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* ── Grid overlay ── matches index.html */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 64px 64px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Orange ambient glow ── matches index.html */
+  body::after {
+    content: "";
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1100px;
+    height: 700px;
+    background: radial-gradient(ellipse, rgba(255,102,0,0.08) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ===== Back to site ===== */
+  .site-nav {
+    display: flex;
+    margin-bottom: 26px;
+  }
+
+  /* Mirrors .nav-links a on index.html */
+  .site-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    color: var(--ink-soft);
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--r);
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .site-nav a:hover {
+    color: var(--ink);
+    background: rgba(255,255,255,0.04);
+  }
+
+  .site-nav .arrow { color: var(--ochre); }
+
+  /* ===== Header ===== */
+  header.masthead {
+    border-bottom: 3px solid var(--line);
+    padding-bottom: 20px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .masthead-left h1 {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 2.1rem;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+    background: linear-gradient(90deg, #ffffff 0%, #ff8c3c 60%, var(--ochre) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .masthead-left .sub {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+  }
+
+  .brief-stamp {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    text-align: right;
+  }
+
+  .brief-stamp .num {
+    font-size: 0.95rem;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* ===== Intro strip + toolbar ===== */
+  .intro-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin: 18px 0 28px;
+    flex-wrap: wrap;
+  }
+
+  .intro {
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    max-width: 58ch;
+    margin: 0;
+  }
+
+  .intro strong { color: var(--ink); }
+
+  .edit-toggle {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--paper-raised);
+    border: 1.5px solid var(--line);
+    color: var(--ink);
+    padding: 9px 14px;
+    border-radius: var(--r);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .edit-toggle .pencil { font-size: 0.85rem; }
+
+  .edit-toggle:hover { background: var(--ochre-soft); border-color: var(--ochre); color: var(--ochre); }
+
+  .edit-toggle.active {
+    background: var(--stamp-red);
+    border-color: var(--stamp-red);
+    color: var(--paper);
+  }
+
+  .edit-toggle.active:hover { background: #d76349; color: var(--paper); }
+
+  .edit-banner {
+    background: var(--ochre-soft);
+    border: 1.5px dashed var(--ochre);
+    border-radius: var(--r);
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    color: #ffb27a;
+    margin-bottom: 18px;
+    display: none;
+  }
+
+  .edit-banner.show { display: block; }
+
+  .notion-note {
+    background: var(--ochre-soft);
+    border: 1.5px dashed var(--ochre);
+    border-radius: var(--r);
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    color: #ffb27a;
+    margin-bottom: 18px;
+  }
+
+  .notion-note strong { color: #ffd9bd; }
+
+  /* ===== Folder tabs ===== */
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: -1px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .tab {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--paper);
+    border: 1.5px solid var(--line);
+    border-bottom: none;
+    color: var(--ink-soft);
+    padding: 10px 14px 12px;
+    border-radius: var(--r) var(--r) 0 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .tab .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--line);
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+
+  .tab .dot.filled { background: var(--accent, var(--sage)); }
+
+  .tab.active {
+    background: var(--paper-raised);
+    color: var(--ink);
+    border-color: var(--line);
+    border-top: 3px solid var(--accent, var(--ochre));
+    padding-top: 8px;
+    font-weight: 600;
+  }
+
+  .tab:hover:not(.active) { color: var(--ink); }
+
+  /* ===== Panel ===== */
+  .panel {
+    background: var(--paper-raised);
+    border: 1.5px solid var(--line);
+    border-top: 4px solid var(--accent, var(--ochre));
+    border-radius: 0 var(--r) var(--r) var(--r);
+    padding: 32px 32px 28px;
+    box-shadow: 0 6px 0 var(--shadow);
+    position: relative;
+  }
+
+  .panel.editing {
+    border-color: var(--stamp-red);
+    box-shadow: 0 6px 0 rgba(194,84,63,0.22);
+  }
+
+  .panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px dashed var(--line);
+    padding-bottom: 14px;
+    margin-bottom: 22px;
+    gap: 12px;
+  }
+
+  .panel-head h2 {
+    font-family: var(--sans);
+    font-size: 1.5rem;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .panel-head input.title-edit {
+    font-family: var(--sans);
+    font-size: 1.5rem;
+    font-weight: 600;
+    border: none;
+    border-bottom: 1.5px dashed var(--stamp-red);
+    background: transparent;
+    color: var(--ink);
+    padding: 0 0 2px;
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .panel-head input.title-edit:focus { outline: none; }
+
+  .panel-head .count {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .panel-note {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    margin: -10px 0 24px;
+    max-width: 60ch;
+  }
+
+  .panel-note input.note-edit {
+    width: 100%;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    border: none;
+    border-bottom: 1px dashed var(--line);
+    background: transparent;
+    padding: 2px 0;
+  }
+
+  .panel-note input.note-edit:focus { outline: none; border-color: var(--stamp-red); }
+
+  .q {
+    margin-bottom: 24px;
+    border-left: 3px solid var(--accent, var(--line));
+    padding-left: 14px;
+  }
+
+  .q label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.98rem;
+    margin-bottom: 4px;
+  }
+
+  .q .why {
+    font-size: 0.8rem;
+    color: var(--accent, var(--sage));
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+
+  .q textarea {
+    width: 100%;
+    min-height: 64px;
+    resize: vertical;
+    background: var(--paper);
+    border: 1px solid var(--line-mid);
+    border-radius: var(--r);
+    padding: 10px 12px;
+    font-family: var(--sans);
+    font-size: 0.92rem;
+    color: var(--ink);
+    transition: border-color 0.15s;
+  }
+
+  .q textarea:focus {
+    outline: none;
+    border-color: var(--accent, var(--ochre));
+  }
+
+  .q textarea::placeholder { color: var(--ink-soft); }
+
+  /* ===== Edit-mode question card ===== */
+  .q-edit {
+    background: var(--paper);
+    border: 1.5px solid var(--line);
+    border-radius: var(--r);
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+
+  .q-edit-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .q-edit-fields { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+  .q-edit input.q-text {
+    width: 100%;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--paper-raised);
+    border: 1.5px solid var(--line);
+    border-radius: var(--r);
+    padding: 8px 10px;
+    font-family: var(--sans);
+  }
+
+  .q-edit input.q-why {
+    width: 100%;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--sage);
+    background: var(--paper-raised);
+    border: 1.5px solid var(--line);
+    border-radius: var(--r);
+    padding: 7px 10px;
+    font-family: var(--sans);
+  }
+
+  .q-edit input:focus { outline: none; border-color: var(--ochre); }
+
+  .q-edit-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .icon-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--r);
+    border: 1.5px solid var(--line);
+    background: var(--paper);
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .icon-btn:hover { background: var(--ochre-soft); border-color: var(--ochre); color: var(--ochre); }
+  .icon-btn:disabled { opacity: 0.25; cursor: default; }
+  .icon-btn:disabled:hover { background: var(--paper); border-color: var(--line); color: var(--ink-soft); }
+
+  .icon-btn.delete:hover { background: var(--stamp-red); border-color: var(--stamp-red); color: var(--paper); }
+
+  .add-q-btn {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: none;
+    border: 1.5px dashed var(--sage);
+    color: var(--sage);
+    padding: 10px 14px;
+    border-radius: var(--r);
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .add-q-btn:hover { background: var(--sage); color: var(--paper); }
+
+  .section-edit-tools {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line);
+  }
+
+  .text-link-btn {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: none;
+    border: none;
+    color: var(--ink-soft);
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 4px;
+  }
+
+  .text-link-btn:hover { color: var(--stamp-red); }
+
+  /* ===== Nav row ===== */
+  .panel-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding-top: 18px;
+    border-top: 1px dashed var(--line);
+  }
+
+  .navbtn {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: none;
+    border: 1.5px solid var(--line);
+    color: var(--ink);
+    padding: 9px 16px;
+    border-radius: var(--r);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+
+  .navbtn:hover { background: var(--ochre-soft); border-color: var(--ochre); color: var(--ochre); }
+  .navbtn:disabled { opacity: 0.3; cursor: default; }
+  .navbtn:disabled:hover { background: none; border-color: var(--line); color: var(--ink); }
+
+  /* ===== Footer / progress bar + export ===== */
+  .footerbar {
+    margin-top: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .progress-wrap {
+    flex: 1;
+    min-width: 220px;
+  }
+
+  .progress-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .progress-track {
+    height: 8px;
+    background: var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--ochre);
+    width: 0%;
+    transition: width 0.25s ease;
+  }
+
+  .export-buttons {
+    display: flex;
+    gap: 10px;
+  }
+
+  .export-btn {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--ochre);
+    color: var(--paper);
+    font-weight: 600;
+    border: none;
+    padding: 11px 18px;
+    border-radius: var(--r);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .export-btn:hover { background: #ff7d24; }
+
+  .export-btn.secondary {
+    background: none;
+    color: var(--ink);
+    font-weight: 400;
+    border: 1.5px solid var(--line);
+  }
+
+  .export-btn.secondary:hover { background: var(--ochre-soft); border-color: var(--ochre); color: var(--ochre); }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--paper-raised);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    padding: 12px 20px;
+    border-radius: var(--r);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 50;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  @media (max-width: 640px) {
+    .panel { padding: 22px 18px 20px; }
+    .masthead-left h1 { font-size: 1.6rem; }
+    .brief-stamp { text-align: left; }
+    .q-edit-row { flex-direction: column; }
+    .q-edit-controls { flex-direction: row; }
+  }
+
+  @media print {
+    .tabs, .panel-nav, .footerbar, .edit-toggle, .edit-banner, .intro-row, header.masthead, .site-nav, #panel, #tabs { display: none !important; }
+    body::before, body::after { display: none !important; }
+    #printArea { display: block !important; }
+    /* The screen theme is dark — force paper colours back for print */
+    body { background: #fff; color: #1a1a1a; }
+  }
+
+  /* Print/PDF output stays light regardless of the screen theme */
+  #printArea { display: none; color: #1a1a1a; }
+  #printArea .pa-title {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 22px;
+    margin: 0 0 4px;
+  }
+  #printArea .pa-sub {
+    font-size: 11px;
+    color: #666;
+    margin: 0 0 20px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 16px;
+  }
+  #printArea .pa-section-title {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 15px;
+    margin: 22px 0 10px;
+    break-after: avoid;
+  }
+  #printArea .pa-q {
+    margin-bottom: 12px;
+    break-inside: avoid;
+  }
+  #printArea .pa-q .pa-question {
+    font-weight: 600;
+    font-size: 12px;
+    margin: 0 0 3px;
+  }
+  #printArea .pa-q .pa-answer {
+    font-size: 11.5px;
+    color: #333;
+    margin: 0;
+    white-space: pre-wrap;
+  }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="site-nav">
+    <a href="/"><span class="arrow">&larr;</span> The Cadence Framework</a>
+  </nav>
+
+  <header class="masthead">
+    <div class="masthead-left">
+      <h1>Brand Discovery Kit</h1>
+      <div class="sub">The Cadence Framework — Client Intake</div>
+    </div>
+    <div class="brief-stamp">
+      Discovery Brief<br>
+      <span class="num" id="clientLabel">No. ____</span>
+    </div>
+  </header>
+
+  <div class="intro-row">
+    <p class="intro">Run this on a call or send it ahead of one — <strong>eight sections</strong> of questions. Answers save as you type. Use <strong>Edit Questions</strong> to add, reword, reorder, or remove any question — your version is remembered next time you open this file.</p>
+
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="edit-toggle" id="editToggle"><span class="pencil">✎</span><span id="editToggleLabel">Edit Questions</span></button>
+    </div>
+  </div>
+
+  <div class="edit-banner" id="editBanner">Editing this section's questions — changes save automatically. Switch off <strong>Edit Questions</strong> to go back to filling out the brief.</div>
+
+  <div class="tabs" id="tabs"></div>
+  <div class="panel" id="panel"></div>
+
+  <div class="footerbar">
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Brief completion</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+    <div class="export-buttons">
+      <button class="export-btn secondary" id="printBtn">Download PDF</button>
+      <button class="export-btn" id="submitBtn">Submit Brief</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="printArea"></div>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<script>
+const STORAGE_KEY = 'brand-discovery-sections-v1';
+
+// Brand reference-sheet hues, lifted for legibility on the dark site theme — one per section
+const SECTION_COLORS = ['#ff6600', '#ff9500', '#ffcb00', '#3d9bff', '#00bfff', '#a77dff'];
+function accentFor(index) { return SECTION_COLORS[index % SECTION_COLORS.length]; }
+
+const DEFAULT_SECTIONS = [
+  {
+    key: "intro",
+    title: "Intro & Contact",
+    note: "Who we're talking to, and how to reach them.",
+    questions: [
+      { q: "Business / organization name" },
+      { q: "Founder(s) or key contact(s) — name and role" },
+      { q: "Best email for this project" },
+      { q: "Best phone number for this project" },
+      { q: "Website and social handles (if any)" },
+      { q: "Today's date / date this brief was completed" }
+    ]
+  },
+  {
+    key: "foundation",
+    title: "Business Foundation",
+    note: "The plain facts, before we make it sound good.",
+    questions: [
+      { q: "What does your business or organization do, in one or two plain sentences?" },
+      { q: "What's the story behind how it started?" },
+      { q: "What problem do you actually solve for the people you serve?" },
+      { q: "What makes you different from others doing similar work?", why: "This is usually where the real positioning hides." },
+      { q: "If your brand disappeared tomorrow, what would people miss?" }
+    ]
+  },
+  {
+    key: "audience",
+    title: "Audience & Positioning",
+    note: "Who this is actually for, and who it isn't.",
+    questions: [
+      { q: "Who is your ideal client, customer, or member? Describe them like a real person." },
+      { q: "What do they care about most when deciding whether to work with you?" },
+      { q: "What hesitations or objections do people usually have before saying yes?" },
+      { q: "Who are you NOT trying to reach?", why: "Saying no on paper makes the yes sharper." },
+      { q: "Name 2–3 competitors or alternatives people consider instead of you. What do you do better?" }
+    ]
+  },
+  {
+    key: "voice",
+    title: "Brand Voice & Personality",
+    note: "How this should sound when it's written down.",
+    questions: [
+      { q: "If your brand were a person, how would you describe them in 3 words?" },
+      { q: "What tone do you want to come across — warm and personal, sharp and direct, playful, formal, something else?" },
+      { q: "Are there words or phrases you always use? Any you'd never use?" },
+      { q: "Send a piece of writing that sounds like \"you\" — an email, post, sermon, pitch. What made it feel right?", why: "A real example beats any adjective list." },
+      { q: "Any brands, in or outside your industry, whose voice you admire?" }
+    ]
+  },
+  {
+    key: "visual",
+    title: "Visual Identity",
+    note: "What this should look like — and what it definitely shouldn't.",
+    questions: [
+      { q: "Do you have existing brand assets (logo, colors, fonts)? Starting fresh or refining?" },
+      { q: "Any colors you love? Any you want nothing to do with?" },
+      { q: "Send 2–3 links or images of visual styles you're drawn to — and why." },
+      { q: "Is there a specific look you want to avoid?" },
+      { q: "Any print, signage, merch, or accessibility constraints we should know about?" }
+    ]
+  },
+  {
+    key: "website",
+    title: "Website",
+    note: "Skip if this project isn't touching the site.",
+    questions: [
+      { q: "What's the single most important action you want a visitor to take?" },
+      { q: "What pages or sections are non-negotiable — About, Services, Donate, Contact, etc.?" },
+      { q: "Do you have existing analytics or feedback on what isn't working today?" },
+      { q: "Who maintains and updates the site after launch — you, us, or someone else?" },
+      { q: "Any must-have integrations — booking, email signup, donations, e-commerce?" }
+    ]
+  },
+  {
+    key: "social",
+    title: "Social Media",
+    note: "Skip if this project isn't touching social.",
+    questions: [
+      { q: "Which platforms actually matter to your audience right now?" },
+      { q: "What's currently working on your channels? What's flopping?" },
+      { q: "How often can you realistically post or film content — be honest?" },
+      { q: "Who's the face of the brand on camera, if anyone?" },
+      { q: "What's one type of content you wish you posted more of?" }
+    ]
+  },
+  {
+    key: "goals",
+    title: "Goals & Logistics",
+    note: "The practical stuff that shapes everything else.",
+    questions: [
+      { q: "What does success look like 90 days after this project wraps?" },
+      { q: "What's the timeline — any hard deadlines like a launch, event, or season?" },
+      { q: "Who has final sign-off on decisions?" },
+      { q: "What's the budget range for this project?" },
+      { q: "Anything else we should know that hasn't come up yet?" }
+    ]
+  }
+];
+
+let SECTIONS = JSON.parse(JSON.stringify(DEFAULT_SECTIONS));
+let current = 0;
+let editMode = false;
+let answers = {};
+
+function rebuildAnswersSkeleton() {
+  const prev = answers;
+  answers = {};
+  SECTIONS.forEach(s => {
+    const prevArr = prev[s.key] || [];
+    answers[s.key] = s.questions.map((_, i) => prevArr[i] || "");
+  });
+}
+
+rebuildAnswersSkeleton();
+
+const tabsEl = document.getElementById('tabs');
+const panelEl = document.getElementById('panel');
+const editToggle = document.getElementById('editToggle');
+const editToggleLabel = document.getElementById('editToggleLabel');
+const editBanner = document.getElementById('editBanner');
+
+function totalQuestions() {
+  return SECTIONS.reduce((sum, s) => sum + s.questions.length, 0);
+}
+
+function answeredCount() {
+  let n = 0;
+  SECTIONS.forEach(s => { (answers[s.key] || []).forEach(a => { if (a.trim().length > 0) n++; }); });
+  return n;
+}
+
+function sectionFilled(sKey) {
+  return (answers[sKey] || []).some(a => a.trim().length > 0);
+}
+
+async function saveSections() {
+  try {
+    await window.storage.set(STORAGE_KEY, JSON.stringify(SECTIONS), false);
+  } catch (e) {
+    // best effort — if storage isn't available, edits still work for this session
+    console.warn('Could not save question edits:', e);
+  }
+}
+
+async function loadSections() {
+  try {
+    const result = await window.storage.get(STORAGE_KEY, false);
+    if (result && result.value) {
+      const parsed = JSON.parse(result.value);
+      if (Array.isArray(parsed) && parsed.length) {
+        SECTIONS = parsed;
+      }
+    }
+  } catch (e) {
+    // no saved edits yet, or storage unavailable — fall back to defaults
+  }
+  rebuildAnswersSkeleton();
+  render();
+}
+
+function renderTabs() {
+  tabsEl.innerHTML = '';
+  SECTIONS.forEach((s, i) => {
+    const tab = document.createElement('div');
+    tab.className = 'tab' + (i === current ? ' active' : '');
+    tab.style.setProperty('--accent', accentFor(i));
+    tab.innerHTML = '<span class="dot' + (sectionFilled(s.key) ? ' filled' : '') + '"></span>' + s.title;
+    tab.addEventListener('click', () => { current = i; render(); });
+    tabsEl.appendChild(tab);
+  });
+}
+
+function makeId() {
+  return 'q_' + Math.random().toString(36).slice(2, 9);
+}
+
+function renderPanel() {
+  const s = SECTIONS[current];
+  panelEl.innerHTML = '';
+  panelEl.className = 'panel' + (editMode ? ' editing' : '');
+  if (!editMode) panelEl.style.setProperty('--accent', accentFor(current));
+
+  const head = document.createElement('div');
+  head.className = 'panel-head';
+
+  if (editMode) {
+    const titleInput = document.createElement('input');
+    titleInput.className = 'title-edit';
+    titleInput.value = s.title;
+    titleInput.addEventListener('input', () => { s.title = titleInput.value; renderTabs(); saveSections(); });
+    head.appendChild(titleInput);
+  } else {
+    const h2 = document.createElement('h2');
+    h2.textContent = s.title;
+    head.appendChild(h2);
+  }
+
+  const count = document.createElement('span');
+  count.className = 'count';
+  count.textContent = 'Section ' + (current + 1) + ' of ' + SECTIONS.length;
+  head.appendChild(count);
+  panelEl.appendChild(head);
+
+  const noteWrap = document.createElement('div');
+  noteWrap.className = 'panel-note';
+  if (editMode) {
+    const noteInput = document.createElement('input');
+    noteInput.className = 'note-edit';
+    noteInput.value = s.note || '';
+    noteInput.placeholder = 'Short note about this section…';
+    noteInput.addEventListener('input', () => { s.note = noteInput.value; saveSections(); });
+    noteWrap.appendChild(noteInput);
+  } else {
+    noteWrap.textContent = s.note || '';
+  }
+  panelEl.appendChild(noteWrap);
+
+  if (editMode) {
+    renderEditQuestions(s);
+  } else {
+    renderFillQuestions(s);
+  }
+}
+
+function renderFillQuestions(s) {
+  s.questions.forEach((item, qi) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'q';
+    wrap.style.setProperty('--accent', accentFor(current));
+
+    const label = document.createElement('label');
+    label.textContent = item.q;
+    wrap.appendChild(label);
+
+    if (item.why) {
+      const why = document.createElement('div');
+      why.className = 'why';
+      why.textContent = 'Why we ask: ' + item.why;
+      wrap.appendChild(why);
+    }
+
+    const ta = document.createElement('textarea');
+    ta.placeholder = 'Type notes from the call, or send this ahead as a form…';
+    ta.value = (answers[s.key] || [])[qi] || "";
+    ta.addEventListener('input', () => {
+      answers[s.key][qi] = ta.value;
+      updateProgress();
+      renderTabs();
+    });
+    wrap.appendChild(ta);
+
+    panelEl.appendChild(wrap);
+  });
+
+  const nav = document.createElement('div');
+  nav.className = 'panel-nav';
+
+  const prevBtn = document.createElement('button');
+  prevBtn.className = 'navbtn';
+  prevBtn.textContent = '← Previous';
+  prevBtn.disabled = current === 0;
+  prevBtn.addEventListener('click', () => { current = Math.max(0, current - 1); render(); });
+
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'navbtn';
+  nextBtn.textContent = current === SECTIONS.length - 1 ? 'Done' : 'Next →';
+  nextBtn.disabled = current === SECTIONS.length - 1;
+  nextBtn.addEventListener('click', () => { current = Math.min(SECTIONS.length - 1, current + 1); render(); });
+
+  nav.appendChild(prevBtn);
+  nav.appendChild(nextBtn);
+  panelEl.appendChild(nav);
+}
+
+function renderEditQuestions(s) {
+  s.questions.forEach((item, qi) => {
+    const card = document.createElement('div');
+    card.className = 'q-edit';
+
+    const row = document.createElement('div');
+    row.className = 'q-edit-row';
+
+    const fields = document.createElement('div');
+    fields.className = 'q-edit-fields';
+
+    const qInput = document.createElement('input');
+    qInput.className = 'q-text';
+    qInput.value = item.q;
+    qInput.placeholder = 'Question text…';
+    qInput.addEventListener('input', () => {
+      item.q = qInput.value;
+      saveSections();
+    });
+    fields.appendChild(qInput);
+
+    const whyInput = document.createElement('input');
+    whyInput.className = 'q-why';
+    whyInput.value = item.why || '';
+    whyInput.placeholder = 'Optional — why you ask this (shown to whoever fills it out)';
+    whyInput.addEventListener('input', () => {
+      item.why = whyInput.value;
+      saveSections();
+    });
+    fields.appendChild(whyInput);
+
+    row.appendChild(fields);
+
+    const controls = document.createElement('div');
+    controls.className = 'q-edit-controls';
+
+    const upBtn = document.createElement('button');
+    upBtn.className = 'icon-btn';
+    upBtn.textContent = '↑';
+    upBtn.title = 'Move up';
+    upBtn.disabled = qi === 0;
+    upBtn.addEventListener('click', () => {
+      [s.questions[qi - 1], s.questions[qi]] = [s.questions[qi], s.questions[qi - 1]];
+      const arr = answers[s.key];
+      [arr[qi - 1], arr[qi]] = [arr[qi], arr[qi - 1]];
+      saveSections();
+      renderPanel();
+    });
+    controls.appendChild(upBtn);
+
+    const downBtn = document.createElement('button');
+    downBtn.className = 'icon-btn';
+    downBtn.textContent = '↓';
+    downBtn.title = 'Move down';
+    downBtn.disabled = qi === s.questions.length - 1;
+    downBtn.addEventListener('click', () => {
+      [s.questions[qi + 1], s.questions[qi]] = [s.questions[qi], s.questions[qi + 1]];
+      const arr = answers[s.key];
+      [arr[qi + 1], arr[qi]] = [arr[qi], arr[qi + 1]];
+      saveSections();
+      renderPanel();
+    });
+    controls.appendChild(downBtn);
+
+    const delBtn = document.createElement('button');
+    delBtn.className = 'icon-btn delete';
+    delBtn.textContent = '×';
+    delBtn.title = 'Delete question';
+    delBtn.addEventListener('click', () => {
+      s.questions.splice(qi, 1);
+      answers[s.key].splice(qi, 1);
+      saveSections();
+      renderPanel();
+      updateProgress();
+    });
+    controls.appendChild(delBtn);
+
+    row.appendChild(controls);
+    card.appendChild(row);
+    panelEl.appendChild(card);
+  });
+
+  const addBtn = document.createElement('button');
+  addBtn.className = 'add-q-btn';
+  addBtn.textContent = '+ Add a question to this section';
+  addBtn.addEventListener('click', () => {
+    s.questions.push({ q: '' });
+    answers[s.key].push('');
+    saveSections();
+    renderPanel();
+    const inputs = panelEl.querySelectorAll('.q-text');
+    if (inputs.length) inputs[inputs.length - 1].focus();
+  });
+  panelEl.appendChild(addBtn);
+
+  const tools = document.createElement('div');
+  tools.className = 'section-edit-tools';
+
+  const resetSectionBtn = document.createElement('button');
+  resetSectionBtn.className = 'text-link-btn';
+  resetSectionBtn.textContent = 'Reset this section to default';
+  resetSectionBtn.addEventListener('click', () => {
+    const def = DEFAULT_SECTIONS.find(d => d.key === s.key);
+    if (def) {
+      SECTIONS[current] = JSON.parse(JSON.stringify(def));
+      rebuildAnswersSkeleton();
+      saveSections();
+      renderTabs();
+      renderPanel();
+      updateProgress();
+    }
+  });
+  tools.appendChild(resetSectionBtn);
+
+  const resetAllBtn = document.createElement('button');
+  resetAllBtn.className = 'text-link-btn';
+  resetAllBtn.textContent = 'Reset all sections to default';
+  resetAllBtn.addEventListener('click', () => {
+    SECTIONS = JSON.parse(JSON.stringify(DEFAULT_SECTIONS));
+    rebuildAnswersSkeleton();
+    saveSections();
+    render();
+  });
+  tools.appendChild(resetAllBtn);
+
+  panelEl.appendChild(tools);
+}
+
+function updateProgress() {
+  const total = totalQuestions();
+  const done = answeredCount();
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '% (' + done + '/' + total + ')';
+  document.getElementById('clientLabel').textContent = 'No. ' + String(done + total).slice(-3);
+}
+
+function render() {
+  if (current >= SECTIONS.length) current = 0;
+  tabsEl.style.display = '';
+  renderTabs();
+  renderPanel();
+  updateProgress();
+}
+
+function buildBriefText() {
+  let out = 'BRAND DISCOVERY BRIEF — The Cadence Framework\n';
+  out += '========================================\n\n';
+  SECTIONS.forEach(s => {
+    out += s.title.toUpperCase() + '\n';
+    out += '-'.repeat(s.title.length) + '\n';
+    s.questions.forEach((item, qi) => {
+      out += 'Q: ' + item.q + '\n';
+      const a = ((answers[s.key] || [])[qi] || '').trim();
+      out += 'A: ' + (a.length ? a : '—') + '\n\n';
+    });
+    out += '\n';
+  });
+  return out;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function buildPDF(sectionsData, answersData, meta) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+
+  const marginX = 48;
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const maxWidth = pageWidth - marginX * 2;
+  const bottomLimit = pageHeight - 48;
+  let y = 64;
+
+  const clientName = (meta && meta.clientName) || '';
+
+  function ensureSpace(lines) {
+    if (y + lines > bottomLimit) {
+      doc.addPage();
+      y = 64;
+    }
+  }
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(20);
+  doc.text('Brand Discovery Brief', marginX, y);
+  y += 22;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.setTextColor(90, 90, 90);
+  doc.text('The Cadence Framework' + (clientName ? '  —  ' + clientName : ''), marginX, y);
+  doc.setTextColor(0, 0, 0);
+  y += 28;
+  doc.setDrawColor(200, 200, 200);
+  doc.line(marginX, y, pageWidth - marginX, y);
+  y += 28;
+
+  sectionsData.forEach(s => {
+    ensureSpace(40);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.text(s.title, marginX, y);
+    y += 20;
+
+    s.questions.forEach((item, qi) => {
+      const qLines = doc.splitTextToSize(item.q, maxWidth);
+      const ansText = ((answersData[s.key] || [])[qi] || '').trim() || '—';
+      const aLines = doc.splitTextToSize(ansText, maxWidth);
+
+      ensureSpace(qLines.length * 14 + aLines.length * 13 + 18);
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(0, 0, 0);
+      doc.text(qLines, marginX, y);
+      y += qLines.length * 14 + 4;
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10.5);
+      doc.setTextColor(60, 60, 60);
+      doc.text(aLines, marginX, y);
+      doc.setTextColor(0, 0, 0);
+      y += aLines.length * 13 + 14;
+    });
+
+    y += 10;
+  });
+
+  return doc;
+}
+
+function filenameFor(clientName) {
+  const safe = (clientName || 'brand-discovery-brief')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+  return (safe || 'brand-discovery-brief') + '.pdf';
+}
+
+function generatePDF() {
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    showToast('PDF library failed to load — check your connection and try again');
+    return;
+  }
+  const clientName = ((answers['intro'] || [])[0] || '').trim();
+  const doc = buildPDF(SECTIONS, answers, { clientName });
+  doc.save(filenameFor(clientName));
+  showToast('PDF downloaded');
+}
+
+// ── Email delivery ──────────────────────────────────────────────
+// NOT YET CONFIGURED — the "Submit Brief" button shows a notice until this is set.
+// 1. Go to https://formspree.io, create a free account with the address that should
+//    receive briefs, create a new form, and copy its endpoint
+//    (looks like https://formspree.io/f/xxxxxxx).
+// 2. Paste that endpoint below, replacing the placeholder.
+// Note: this file is public — anything written here is visible in the page source.
+const FORM_ENDPOINT = 'PASTE_YOUR_FORMSPREE_ENDPOINT_HERE';
+
+async function submitBrief() {
+  if (FORM_ENDPOINT.indexOf('PASTE_YOUR_FORMSPREE_ENDPOINT_HERE') !== -1) {
+    showToast('Email delivery isn\'t set up yet — add your Formspree endpoint in the code');
+    return;
+  }
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    showToast('PDF library failed to load — check your connection and try again');
+    return;
+  }
+
+  const introAnswers = answers['intro'] || [];
+  const clientName = (introAnswers[0] || '').trim();
+  const founders = (introAnswers[1] || '').trim();
+  const email = (introAnswers[2] || '').trim();
+  const phone = (introAnswers[3] || '').trim();
+  showToast('Sending…');
+
+  try {
+    const doc = buildPDF(SECTIONS, answers, { clientName });
+    const pdfBlob = doc.output('blob');
+
+    const formData = new FormData();
+    formData.append('client_name', clientName || '(untitled)');
+    formData.append('founders', founders);
+    formData.append('email', email);
+    formData.append('phone', phone);
+    formData.append('status', 'Draft');
+    formData.append('submitted_at', new Date().toLocaleString());
+    formData.append('full_brief', buildBriefText());
+    formData.append('_subject', 'New Brand Discovery Brief — ' + (clientName || 'untitled'));
+    formData.append('attachment', pdfBlob, filenameFor(clientName));
+
+    const res = await fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (res.ok) {
+      showToast('Sent — will appear in Notion once Zapier is connected');
+    } else {
+      showToast('Send failed — try Download PDF instead');
+    }
+  } catch (e) {
+    showToast('Send failed — check your connection and try again');
+  }
+}
+
+document.getElementById('printBtn').addEventListener('click', generatePDF);
+document.getElementById('submitBtn').addEventListener('click', submitBrief);
+
+editToggle.addEventListener('click', () => {
+  editMode = !editMode;
+  editToggle.classList.toggle('active', editMode);
+  editToggleLabel.textContent = editMode ? 'Done Editing' : 'Edit Questions';
+  editBanner.classList.toggle('show', editMode);
+  renderPanel();
+});
+
+loadSections();
+</script>
+</body>
+</html>

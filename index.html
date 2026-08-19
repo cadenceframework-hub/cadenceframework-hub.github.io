@@ -222,6 +222,7 @@
     }
 
     .nav-logo {
+      white-space: nowrap;
       font-size: 0.95rem;
       font-weight: 800;
       letter-spacing: -0.03em;
@@ -240,6 +241,7 @@
 
     .nav-links a {
       font-family: var(--mono);
+      white-space: nowrap;
       font-size: 0.72rem;
       letter-spacing: 0.04em;
       color: var(--muted);
@@ -1285,12 +1287,15 @@
       .work-cat:nth-child(2n) { border-right: none; }
     }
 
+    /* Nav collapses to the hamburger before the link row can crowd the CTA */
+    @media (max-width: 767px) {
+      .nav-links, .nav-cta-desktop { display: none; }
+      .nav-hamburger { display: flex; }
+    }
+
     @media (max-width: 640px) {
       .wrap { padding: 0 1.25rem; }
       :root { --section-gap: 64px; }
-
-      .nav-links, .nav-cta-desktop { display: none; }
-      .nav-hamburger { display: flex; }
 
       #hero { padding: 100px 0 50px; }
       .hero-h1 { letter-spacing: -0.04em; }
@@ -1393,6 +1398,7 @@
       <li><a href="#sync">Process</a></li>
       <li><a href="#services">Services</a></li>
       <li><a href="#work">Work</a></li>
+      <li><a href="/brand-discovery-kit/">Brand Kit</a></li>
     </ul>
 
     <a href="https://calendly.com/rosh903/cadencediscoverycall" target="_blank" rel="noopener noreferrer" class="btn-cta nav-cta-desktop">Book a Call &rarr;<span class="sr-only"> (opens in new tab)</span></a>
@@ -1409,6 +1415,7 @@
   <a href="#sync" class="mobile-link">Process</a>
   <a href="#services" class="mobile-link">Services</a>
   <a href="#work" class="mobile-link">Work</a>
+  <a href="/brand-discovery-kit/" class="mobile-link">Brand Kit</a>
   <a href="https://calendly.com/rosh903/cadencediscoverycall" target="_blank" rel="noopener noreferrer" class="btn-cta">Book a Call &rarr;<span class="sr-only"> (opens in new tab)</span></a>
 </div>
 

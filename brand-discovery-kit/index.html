@@ -640,8 +640,21 @@
     transform: translateX(-50%) translateY(0);
   }
 
+  /* Build stamp — lets anyone reporting a problem say which version they're on,
+     so a stale browser cache is obvious instead of looking like a bug. */
+  .build-stamp {
+    margin-top: 28px;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: #3a3a3a;
+  }
+
   @media (max-width: 640px) {
-    .wrap { padding: 28px 16px 64px; }
+    /* Deep bottom padding so the fixed toast never lands on the export
+       buttons when scrolled to the end of the page. */
+    .wrap { padding: 28px 16px 140px; }
     .panel { padding: 22px 18px 20px; }
     .masthead-left h1 { font-size: 1.6rem; }
     .brief-stamp { text-align: left; }
@@ -786,6 +799,8 @@
       <button class="export-btn" id="submitBtn">Submit Brief</button>
     </div>
   </div>
+
+  <p class="build-stamp">Build 2026.08.19&thinsp;&middot;&thinsp;3</p>
 
 </div>
 

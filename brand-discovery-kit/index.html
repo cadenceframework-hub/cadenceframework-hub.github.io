@@ -1288,60 +1288,116 @@ function generatePDF() {
   showToast('PDF downloaded');
 }
 
-// ── Email delivery ──────────────────────────────────────────────
-// NOT YET CONFIGURED — the "Submit Brief" button shows a notice until this is set.
-// 1. Go to https://formspree.io, create a free account with the address that should
-//    receive briefs, create a new form, and copy its endpoint
-//    (looks like https://formspree.io/f/xxxxxxx).
-// 2. Paste that endpoint below, replacing the placeholder.
-// Note: this file is public — anything written here is visible in the page source.
-const FORM_ENDPOINT = 'PASTE_YOUR_FORMSPREE_ENDPOINT_HERE';
+// ── Delivery config ─────────────────────────────────────────────
+// Setup steps live in /BRAND-KIT-SETUP.md at the repo root.
+//
+// This file is PUBLIC — everything here is visible in the page source. Both
+// values below are safe to publish: the Web3Forms access key only accepts
+// submissions (it can't read past ones), and the Apps Script URL is write-only.
+// Never put a Google API key, Airtable token, or Notion secret in this file.
+//
+// 1. WEB3FORMS_KEY — emails each brief to you.
+//    Get a free key at https://web3forms.com (enter the inbox that should
+//    receive briefs; they email you the access key). Use a DIFFERENT key from
+//    the one on the landing page so briefs don't mix in with marketing leads.
+// 2. SHEET_ENDPOINT — appends each brief as a row in a Google Sheet.
+//    Optional. Follow BRAND-KIT-SETUP.md to deploy the Apps Script, then paste
+//    the /exec URL here.
+// Either one works on its own; leave the other as-is to skip it.
+const WEB3FORMS_KEY  = 'PASTE_YOUR_WEB3FORMS_ACCESS_KEY_HERE';
+const SHEET_ENDPOINT = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+
+const emailConfigured = WEB3FORMS_KEY.indexOf('PASTE_YOUR') === -1;
+const sheetConfigured = SHEET_ENDPOINT.indexOf('PASTE_YOUR') === -1;
+
+// Collects the four Intro & Contact answers we treat as metadata.
+function briefMeta() {
+  const a = answers['intro'] || [];
+  return {
+    clientName: (a[0] || '').trim(),
+    founders:   (a[1] || '').trim(),
+    email:      (a[2] || '').trim(),
+    phone:      (a[3] || '').trim()
+  };
+}
+
+// Web3Forms free tier can't take attachments (file upload is a PRO feature), so
+// the whole brief goes in the email body as text. Clients still get the PDF via
+// the Download PDF button.
+async function sendEmail(meta, answered, total) {
+  const res = await fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      access_key: WEB3FORMS_KEY,
+      subject: 'New Brand Discovery Brief — ' + (meta.clientName || 'untitled'),
+      from_name: 'Cadence Brand Discovery Kit',
+      botcheck: '',
+      client_name: meta.clientName || '(untitled)',
+      founders: meta.founders,
+      email: meta.email,
+      phone: meta.phone,
+      completion: answered + ' of ' + total + ' questions answered',
+      submitted_at: new Date().toLocaleString(),
+      brief: buildBriefText()
+    })
+  });
+  if (!res.ok) throw new Error('web3forms ' + res.status);
+}
+
+// Apps Script web apps don't return CORS headers we can read from a browser, so
+// this is deliberately fire-and-forget: a 'no-cors' POST gives an opaque
+// response that can't be inspected. The toast reflects the email result only —
+// if the sheet matters to you, verify rows are landing after setup.
+function sendToSheet(meta, answered, total) {
+  return fetch(SHEET_ENDPOINT, {
+    method: 'POST',
+    mode: 'no-cors',
+    // text/plain keeps this a "simple request" so the browser skips preflight,
+    // which Apps Script would reject. doPost reads e.postData.contents.
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({
+      client_name: meta.clientName || '(untitled)',
+      founders: meta.founders,
+      email: meta.email,
+      phone: meta.phone,
+      completion: answered + '/' + total,
+      submitted_at: new Date().toISOString(),
+      brief: buildBriefText(),
+      answers: answers
+    })
+  }).catch(() => { /* fire-and-forget */ });
+}
 
 async function submitBrief() {
-  if (FORM_ENDPOINT.indexOf('PASTE_YOUR_FORMSPREE_ENDPOINT_HERE') !== -1) {
-    showToast('Email delivery isn\'t set up yet — add your Formspree endpoint in the code');
-    return;
-  }
-  if (!window.jspdf || !window.jspdf.jsPDF) {
-    showToast('PDF library failed to load — check your connection and try again');
+  if (!emailConfigured && !sheetConfigured) {
+    showToast('Submitting isn\'t set up yet — see BRAND-KIT-SETUP.md');
     return;
   }
 
-  const introAnswers = answers['intro'] || [];
-  const clientName = (introAnswers[0] || '').trim();
-  const founders = (introAnswers[1] || '').trim();
-  const email = (introAnswers[2] || '').trim();
-  const phone = (introAnswers[3] || '').trim();
+  const meta = briefMeta();
+  const total = SECTIONS.reduce((n, s) => n + s.questions.length, 0);
+  const answered = Object.values(answers)
+    .reduce((n, list) => n + (list || []).filter(v => (v || '').trim()).length, 0);
+
+  if (!answered) {
+    showToast('Nothing to send yet — answer at least one question');
+    return;
+  }
+
   showToast('Sending…');
+  if (sheetConfigured) sendToSheet(meta, answered, total);
+
+  if (!emailConfigured) {
+    showToast('Saved to the sheet — email delivery isn\'t set up yet');
+    return;
+  }
 
   try {
-    const doc = buildPDF(SECTIONS, answers, { clientName });
-    const pdfBlob = doc.output('blob');
-
-    const formData = new FormData();
-    formData.append('client_name', clientName || '(untitled)');
-    formData.append('founders', founders);
-    formData.append('email', email);
-    formData.append('phone', phone);
-    formData.append('status', 'Draft');
-    formData.append('submitted_at', new Date().toLocaleString());
-    formData.append('full_brief', buildBriefText());
-    formData.append('_subject', 'New Brand Discovery Brief — ' + (clientName || 'untitled'));
-    formData.append('attachment', pdfBlob, filenameFor(clientName));
-
-    const res = await fetch(FORM_ENDPOINT, {
-      method: 'POST',
-      body: formData,
-      headers: { 'Accept': 'application/json' }
-    });
-
-    if (res.ok) {
-      showToast('Sent — will appear in Notion once Zapier is connected');
-    } else {
-      showToast('Send failed — try Download PDF instead');
-    }
+    await sendEmail(meta, answered, total);
+    showToast('Brief sent' + (sheetConfigured ? ' — and saved to the sheet' : ''));
   } catch (e) {
-    showToast('Send failed — check your connection and try again');
+    showToast('Send failed — use Download PDF and email it instead');
   }
 }
 
